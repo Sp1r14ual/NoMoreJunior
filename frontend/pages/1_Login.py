@@ -22,7 +22,7 @@ with st.form("login_form"):
             
             # Получаем информацию о пользователе
             headers = {"Authorization": f"Bearer {st.session_state.token}"}
-            user_r = requests.get(f"{API_BASE}/users/me", headers=headers)
+            user_r = requests.get(f"{API_BASE}/auth/me", headers=headers)
             if user_r.ok:
                 st.session_state.user = user_r.json()
                 st.session_state.is_admin = st.session_state.user.get("is_admin", False)

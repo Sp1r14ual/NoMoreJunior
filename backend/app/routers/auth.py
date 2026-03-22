@@ -5,8 +5,16 @@ from sqlalchemy.orm import Session
 from .. import schemas, crud, models
 from ..database import get_db
 from ..core.security import verify_password, get_password_hash, create_access_token
+from ..dependencies import get_current_active_user
 
 router = APIRouter()
+
+@router.get("/me", response_model=schemas.UserOut)
+def read_users_me(
+    current_user: models.User = Depends(get_current_active_user)
+):
+    """Получить данные текущего пользователя"""
+    return current_user
 
 @router.post("/register", response_model=schemas.UserOut)
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):

@@ -1,7 +1,7 @@
 # backend/app/routers/admin.py
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from .. import schemas, crud, models
 from ..database import get_db
 from ..dependencies import get_current_admin_user
@@ -73,3 +73,28 @@ def delete_question(
     if not success:
         raise HTTPException(404, "Вопрос не найден")
     return None
+
+@router.get("/users", response_model=List[schemas.UserListItem])
+def get_users_list(
+    db: Session = Depends(get_db),
+    current_admin: models.User = Depends(get_current_admin_user),
+    
+    # параметры для фильтрации и пагинации
+    skip: int = Query(0, ge=0, description="Пропустить N записей"),
+    limit: int = Query(50, ge=1, le=200, description="Количество записей на странице"),
+    only_active: bool = Query(False, description="Показывать только активных пользователей"),
+    search: Optional[str] = Query(None, description="Поиск по username или email (частичное совпадение)")
+):
+    """
+    Получить список пользователей  
+    Доступно только администраторам
+    """
+    users = crud.user.get_users(
+        db=db,
+        skip=skip,
+        limit=limit,
+        only_active=only_active,
+        search=search
+    )
+    
+    return users

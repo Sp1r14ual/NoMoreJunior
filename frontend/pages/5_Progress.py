@@ -20,5 +20,6 @@ try:
         # df = df[["category_id", "score", "total_questions", "accuracy", "last_updated"]]
         df = df[["category_id", "score", "total_questions", "accuracy"]]
         st.dataframe(df.style.format(precision=1), use_container_width=True)
+
 except Exception as e:
     st.error(f"Не удалось загрузить прогресс: {e}")

@@ -2,6 +2,7 @@
 from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..core.security import get_password_hash
+from typing import List
 
 
 def get_user(db: Session, user_id: int):
@@ -16,9 +17,31 @@ def get_user_by_username(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+# def get_users(db: Session, skip: int = 0, limit: int = 100):
+#     return db.query(models.User).offset(skip).limit(limit).all()
 
+def get_users(
+    db: Session,
+    skip: int = 0,
+    limit: int = 100,
+    only_active: bool = False,
+    search: str | None = None
+) -> List[models.User]:
+    query = db.query(models.User)
+    
+    if only_active:
+        query = query.filter(models.User.is_active == True)
+    
+    if search:
+        search = f"%{search}%"
+        query = query.filter(
+            or_(
+                models.User.username.ilike(search),
+                models.User.email.ilike(search)
+            )
+        )
+    
+    return query.offset(skip).limit(limit).all()
 
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = get_password_hash(user.password)
