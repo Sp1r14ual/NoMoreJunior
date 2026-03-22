@@ -5,7 +5,7 @@ import pandas as pd
 # ────────────────────────────────────────────────
 # Конфигурация
 # ────────────────────────────────────────────────
-API_BASE = "http://localhost:8000"  # ← поменяй на реальный адрес
+API_BASE = "http://backend:8000"  # ← поменяй на реальный адрес
 
 if "token" not in st.session_state or st.session_state.token is None:
     st.error("Необходим вход в систему")

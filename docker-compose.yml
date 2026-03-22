@@ -9,9 +9,8 @@ services:
     volumes:
       - ./backend:/app
     restart: always
-    extra_hosts:
-        - "host.docker.internal:host-gateway"
-
+    networks:
+      - backend_network
 
   frontend:
     build: ./frontend
@@ -23,5 +22,10 @@ services:
     depends_on:
       - backend
     restart: always
-    extra_hosts:
-        - "host.docker.internal:host-gateway"
+    networks:
+      - backend_network
+      
+networks:
+  backend_network:
+    external: true
+

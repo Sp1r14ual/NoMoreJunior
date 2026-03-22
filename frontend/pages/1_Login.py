@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-API_BASE = "http://localhost:8000"
+API_BASE = "http://backend:8000"
 
 st.title("Вход")
 
@@ -13,7 +13,7 @@ with st.form("login_form"):
     if submit:
         try:
             r = requests.post(
-                f"{st.session_state.get('API_BASE', 'http://localhost:8000')}/auth/token",
+                f"{st.session_state.get('API_BASE', 'http://backend:8000')}/auth/token",
                 data={"username": username, "password": password}
             )
             r.raise_for_status()

@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-API_BASE = "http://localhost:8000"
+API_BASE = "http://backend:8000"
 
 st.title("Категории")
 
